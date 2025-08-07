@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Marketing Strategy: Hickling Trail Senior Housing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard with four main thematic sections: 1. "The Hickling Trail Advantage" to visually showcase the key location benefits. 2. "Meet Your Ideal Tenants" to provide clear profiles of the target audience. 3. "Your Marketing Playbook" to offer an interactive guide to digital and community channels. 4. "Crafting Your Message" to give practical, channel-specific communication advice. This structure was chosen to transform the report's linear text into a task-oriented, exploratory experience. Users can quickly navigate to the section most relevant to their immediate needs (e.g., "Where should I post today?") while still understanding how all pieces of the strategy connect. The flow encourages exploration, starting with the "Why" (the location's value), moving to the "Who" (the tenants), then the "How" (the marketing plan). -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Hickling Trail Amenity Matrix (Table 1) -> Goal: Inform/Explore -> Viz/Method: Interactive Card Grid with Icons -> Interaction: Hover/Click to reveal details -> Justification: More engaging and scannable than a static table, allowing users to quickly grasp the key benefits. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Target Tenant Profiles (Section 1.2) -> Goal: Inform/Compare -> Viz/Method: Side-by-side comparison cards -> Interaction: Static display -> Justification: Clearly delineates the two key audience segments for easy comparison of their needs and motivations. -> Library/Method: HTML/CSS.
+        - Report Info: Marketing Channel Comparison Grid (Table 2) -> Goal: Compare/Analyze -> Viz/Method: Interactive Radar Chart -> Interaction: Hover over points to see channel details -> Justification: Provides a powerful visual summary of the marketing mix, showing the balance between different types of outreach (Digital vs. Community, High vs. Low Cost). -> Library/Method: Chart.js.
+        - Report Info: Phased Implementation Roadmap (Section 5.1) -> Goal: Organize/Plan -> Viz/Method: Interactive Tabbed Timeline -> Interaction: Click tabs to switch between phases -> Justification: Breaks down the complex plan into manageable, sequential steps, making it less overwhelming and more actionable. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Messaging Examples (Section 4.2) -> Goal: Inform/Guide -> Viz/Method: Interactive Accordion -> Interaction: Click to expand and see message examples -> Justification: Presents practical, ready-to-use content in a compact format, tailored for different platforms. -> Library/Method: HTML/CSS/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F9F9;
+            color: #333;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #4A90E2;
+            border-bottom-color: #4A90E2;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-gray-800">Hickling Trail Marketing</div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-link border-b-2 border-transparent pb-1" data-target="advantage">The Advantage</a>
+                    <a class="nav-link border-b-2 border-transparent pb-1" data-target="tenants">Ideal Tenants</a>
+                    <a class="nav-link border-b-2 border-transparent pb-1" data-target="playbook">Playbook</a>
+                    <a class="nav-link border-b-2 border-transparent pb-1" data-target="messaging">Messaging</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="advantage" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">The Hickling Trail Advantage</h2>
+            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-12">Your property isn't just a room; it's a gateway to a lifestyle of convenience, health, and recreation. This section highlights the key location benefits that are most attractive to your target audience. Use these points as the foundation of your marketing message.</p>
+            <div id="amenity-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="tenants" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Meet Your Ideal Tenants</h2>
+            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-12">Understanding your audience is key. Your marketing should speak to two distinct groups, each with their own motivations and needs. Remember, you're often speaking to their tech-savvy adult children as well, so professionalism is paramount.</p>
+            <div class="flex flex-wrap justify-center gap-8">
+                <div class="card bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-600">Segment A: The Active Pre/Post-Retiree (50-65)</h3>
+                    <p class="text-gray-700 mb-4">Digitally proficient and active, this group is downsizing for lifestyle freedom. They're looking for convenience and community, not care.</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>**Motivations:** Reduce home maintenance, unlock equity, pursue hobbies.</li>
+                        <li>**Values:** Independence, convenience, recreation, social opportunities.</li>
+                        <li>**Where to Reach Them:** Realtor.ca, Zumper, Facebook Marketplace.</li>
+                        <li>**Key Message:** "Enjoy a lock-and-leave lifestyle with everything you need at your doorstep."</li>
+                    </ul>
+                </div>
+                <div class="card bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+                    <h3 class="text-2xl font-bold mb-4 text-teal-600">Segment B: The Established Retiree (65-75)</h3>
+                    <p class="text-gray-700 mb-4">While still able, this group places a higher premium on security and proactive healthcare access. Trust is their primary currency.</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>**Motivations:** Future-proofing their living situation, simplicity, safety.</li>
+                        <li>**Values:** Security, comfort, proximity to healthcare, community belonging.</li>
+                        <li>**Where to Reach Them:** 55+ Centres, RVH referrals, community word-of-mouth.</li>
+                        <li>**Key Message:** "Live with peace of mind in a safe, quiet home, just moments from world-class healthcare."</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="playbook" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Your Marketing Playbook</h2>
+            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-12">A multi-channel approach is essential. This playbook outlines the digital and community-based channels to prioritize. Use the chart to visualize your marketing mix and the timeline to guide your implementation.</p>
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4">Channel Effectiveness Overview</h3>
+                     <div class="chart-container">
+                        <canvas id="marketing-channels-chart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Phased Implementation Roadmap</h3>
+                    <div id="timeline-tabs">
+                        <div class="flex border-b">
+                            <button data-tab="1" class="timeline-tab flex-1 py-2 text-center font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent focus:outline-none">Phase 1</button>
+                            <button data-tab="2" class="timeline-tab flex-1 py-2 text-center font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent focus:outline-none">Phase 2</button>
+                            <button data-tab="3" class="timeline-tab flex-1 py-2 text-center font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent focus:outline-none">Phase 3</button>
+                            <button data-tab="4" class="timeline-tab flex-1 py-2 text-center font-semibold text-gray-500 hover:text-blue-600 border-b-2 border-transparent focus:outline-none">Phase 4</button>
+                        </div>
+                        <div id="timeline-content" class="mt-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="messaging" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Crafting Your Message</h2>
+            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-12">The right message builds trust and attracts the right tenant. Adapt your tone and content for each channel, always focusing on positive, empowering language. Click each channel below for a ready-to-use template.</p>
+            <div id="messaging-accordion" class="max-w-4xl mx-auto space-y-4">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-20">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-600">
+            <p>&copy; 2024 Hickling Trail Marketing Strategy. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const amenityData = [
+                { category: 'Healthcare', name: 'Royal Victoria Regional Health Centre (RVH)', proximity: '0.8 km', benefit: 'Unparalleled peace of mind; easy access for appointments, volunteer work, or visiting.', icon: '✚' },
+                { category: 'Recreation', name: 'Hickling Trail (Trans Canada Trail)', proximity: 'Direct Access', benefit: 'Safe, accessible walking and hiking trail for daily exercise and connection to nature.', icon: '🌲' },
+                { category: 'Shopping', name: 'No Frills Grocery Store', proximity: '1.2 km', benefit: 'Affordable and convenient grocery shopping for daily needs.', icon: '🛒' },
+                { category: 'Transit', name: 'Barrie Transit Route 8A/8B', proximity: 'Direct Access', benefit: 'Direct bus connection to RVH, Downtown, and Park Place, fostering independence.', icon: '🚌' },
+                { category: 'Education', name: 'Georgian College', proximity: '1 km', benefit: 'Opportunities for lifelong learning, community events, and proximity for part-time work.', icon: '🎓' },
+                { category: 'Recreation', name: 'Barrie Waterfront / North Shore Trail', proximity: '~3 km', benefit: 'Accessible, scenic trails for longer walks, biking, and enjoying Kempenfelt Bay.', icon: '🌊' }
+            ];
+
+            const amenityGrid = document.getElementById('amenity-grid');
+            amenityData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card bg-white p-6 rounded-lg shadow-md flex items-start space-x-4';
+                card.innerHTML = `
+                    <div class="text-4xl">${item.icon}</div>
+                    <div>
+                        <h4 class="font-bold text-xl mb-1">${item.name}</h4>
+                        <p class="text-sm font-semibold text-gray-500 mb-2">${item.proximity}</p>
+                        <p class="text-gray-600">${item.benefit}</p>
+                    </div>
+                `;
+                amenityGrid.appendChild(card);
+            });
+
+            const timelineData = {
+                1: { title: 'Weeks 1-2: Foundational Setup', tasks: ['Commission professional photography/virtual tour.', 'Write master copy for all listings.', 'Create central "hub" listing on Realtor.ca.', 'Design and print flyers/info packages.'] },
+                2: { title: 'Weeks 2-4: Digital Saturation', tasks: ['Post "spoke" listings on Zumper, Kijiji, etc.', 'Launch ads on BarrieToday.com & Simcoe.com.', 'Join relevant local Facebook groups.'] },
+                3: { title: 'Weeks 3-6: Community Outreach', tasks: ['Distribute flyers at 55+ Centres & Library.', 'Email info packages to BSSN & RVH Patient Office.', 'Contact Royal Canadian Legion for info distribution.'] },
+                4: { title: 'Ongoing: Nurture & Optimize', tasks: ['Follow up with referral network quarterly.', 'Refresh online ads every 2-3 weeks.', 'Engage authentically in Facebook groups.'] }
+            };
+
+            const timelineTabs = document.querySelectorAll('.timeline-tab');
+            const timelineContent = document.getElementById('timeline-content');
+
+            function updateTimeline(tabId) {
+                const data = timelineData[tabId];
+                timelineContent.innerHTML = `
+                    <h4 class="text-xl font-bold mb-4">${data.title}</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        ${data.tasks.map(task => `<li>${task}</li>`).join('')}
+                    </ul>
+                `;
+                timelineTabs.forEach(t => {
+                    t.classList.toggle('text-blue-600', t.dataset.tab === tabId);
+                    t.classList.toggle('border-blue-600', t.dataset.tab === tabId);
+                    t.classList.toggle('text-gray-500', t.dataset.tab !== tabId);
+                    t.classList.toggle('border-transparent', t.dataset.tab !== tabId);
+                });
+            }
+
+            timelineTabs.forEach(tab => {
+                tab.addEventListener('click', () => updateTimeline(tab.dataset.tab));
+            });
+            updateTimeline('1');
+
+            const messagingData = [
+                { channel: 'Realtor.ca / Zumper Listing', content: `<strong>Headline:</strong> Bright & Spacious Private Room in Grove East | Steps to RVH & Parks | Ideal for Active 55+ Lifestyle.<br><br><strong>Body:</strong> Discover the perfect blend of independence and convenience in this beautiful Grove East home. This private room offers a peaceful retreat with access to shared amenities, all maintained for a maintenance-free lifestyle. Ideal for a mature, responsible individual, you'll be just moments from the Royal Victoria Health Centre, scenic walking trails, and essential shopping. As part of our standard application process, prospective tenants will be asked to complete a rental application and provide consent for a credit and reference check.` },
+                { channel: 'Facebook Group Post', content: `<strong>Post:</strong> Hi neighbours, I'm a local real estate agent with a lovely, private room available in a quiet home on Hickling Trail, perfect for a mature, responsible individual. It's incredibly close to the hospital and some beautiful walking trails, making it a great spot to enjoy a convenient and active lifestyle. The home is well-maintained and shared with other respectful residents. Feel free to PM me for more details or to arrange a viewing!` },
+                { channel: 'Seniors\' Centre Flyer', content: `<strong>Headline:</strong> Considering Downsizing? Enjoy a Safe, Convenient, and Independent Lifestyle in Your Neighbourhood.<br><br><strong>Content:</strong><ul><li class='ml-4 list-disc'>Walk to RVH & Parks</li><li class='ml-4 list-disc'>Quiet, Secure, Professional Home</li><li class='ml-4 list-disc'>All-Inclusive Monthly Rent</li><li class='ml-4 list-disc'>Private Room & Bath</li></ul><br><strong>Contact [Your Name] at [Your Phone Number] for more information.</strong>` }
+            ];
+
+            const accordion = document.getElementById('messaging-accordion');
+            messagingData.forEach((item, index) => {
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'bg-white rounded-lg shadow-md';
+                accordionItem.innerHTML = `
+                    <button class="accordion-toggle w-full flex justify-between items-center p-6 text-left font-semibold text-xl focus:outline-none">
+                        <span>${item.channel}</span>
+                        <span class="transform transition-transform duration-300">▼</span>
+                    </button>
+                    <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <div class="p-6 pt-0 text-gray-600">${item.content}</div>
+                    </div>
+                `;
+                accordion.appendChild(accordionItem);
+            });
+
+            document.querySelectorAll('.accordion-toggle').forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const arrow = button.querySelector('span:last-child');
+                    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                        content.style.maxHeight = '0px';
+                        arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        arrow.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            const ctx = document.getElementById('marketing-channels-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Realtor.ca', 'Local Digital Ads', '55+ Centres', 'RVH Referrals', 'Social Media', 'Kijiji/Zumper'],
+                    datasets: [{
+                        label: 'Impact / Reach',
+                        data: [9, 7, 8, 9, 6, 7],
+                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                        borderColor: 'rgba(74, 144, 226, 1)',
+                        pointBackgroundColor: 'rgba(74, 144, 226, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(74, 144, 226, 1)'
+                    }, {
+                        label: 'Trust / Lead Quality',
+                        data: [9, 6, 9, 10, 5, 6],
+                        backgroundColor: 'rgba(80, 227, 194, 0.2)',
+                        borderColor: 'rgba(80, 227, 194, 1)',
+                        pointBackgroundColor: 'rgba(80, 227, 194, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(80, 227, 194, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scale: {
+                        ticks: { beginAtZero: true, max: 10 }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.r !== null) {
+                                        label += context.parsed.r
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-target') === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
